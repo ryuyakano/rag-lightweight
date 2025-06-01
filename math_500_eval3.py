@@ -7,7 +7,7 @@ import time
 import re
 from datasets import load_dataset
 
-import wandb  # 🔸 追加
+import wandb  
 
 
 OLLAMA_API_URL = "http://ollama:11434/api/generate"
@@ -109,7 +109,7 @@ for i, example in enumerate(dataset, 1):
     try:
         response = requests.post(OLLAMA_API_URL, headers=HEADERS, data=json.dumps(payload))
     except Exception as e:
-        print(f"  🚨 通信エラー: {e}")
+        print(f"通信エラー: {e}")
         continue
     elapsed_time = time.time() - start_time
     total_time += elapsed_time
@@ -131,26 +131,26 @@ for i, example in enumerate(dataset, 1):
         is_llm_correct = False
 
         if predicted_answer == expected_answer:
-            print("  ✅ 正規表現一致で正解")
+            print("正規表現一致で正解")
             is_regex_correct = True
             regex_correct += 1
         else:
             if predicted_answer:
-                print(f"  ❌ 正規表現一致せず（抽出: {predicted_answer}）")
+                print(f"正規表現一致せず（抽出: {predicted_answer}）")
             else:
-                print("  ❌ フォーマット不一致（\\boxed{{...}} が見つかりません）")
+                print("フォーマット不一致（\\boxed{{...}} が見つかりません）")
 
             # LLM による柔軟評価を実施
             # judgment = ask_judgment(question, expected_answer, reply)
             judgment = ask_judgment_openai(question, expected_answer, reply)
-            print("  🤖 LLMによる判定:", judgment)
+            print("LLMによる判定:", judgment)
 
             if "正解" in judgment and "不正解" not in judgment:
-                print("  ✅ LLM評価で正解（柔軟判定）")
+                print("LLM評価で正解（柔軟判定）")
                 is_llm_correct = True
                 llm_correct += 1
             else:
-                print("  ❌ LLM評価では不正解")
+                print("LLM評価では不正解")
 
         print()
     else:
@@ -164,14 +164,14 @@ regex_accuracy = regex_correct / total * 100
 combined_accuracy = (regex_correct + llm_correct) / total * 100
 average_time = total_time / total
 
-print("📊 評価結果")
+print("評価結果")
 print(f"モデル名: {MODEL_NAME}")
-print(f"✅ 正規表現一致の正解数: {regex_correct}/{total}（{regex_accuracy:.2f}%）")
-print(f"✅ LLMによる追加正解数: {llm_correct}（除外済み）")
-print(f"✅ 合計正解数（重複なし）: {regex_correct + llm_correct}/{total}（{combined_accuracy:.2f}%）")
-print(f"⏱️ 平均応答時間: {average_time:.2f} 秒")
-print(f"🐢 最も時間がかかった問題:\n{max_time_problem}")
-print(f"   所要時間: {max_time:.2f} 秒")
+print(f"正規表現一致の正解数: {regex_correct}/{total}（{regex_accuracy:.2f}%）")
+print(f"LLMによる追加正解数: {llm_correct}（除外済み）")
+print(f"合計正解数（重複なし）: {regex_correct + llm_correct}/{total}（{combined_accuracy:.2f}%）")
+print(f"平均応答時間: {average_time:.2f} 秒")
+print(f"最も時間がかかった問題:\n{max_time_problem}")
+print(f"所要時間: {max_time:.2f} 秒")
 
 wandb.log({
     "total_samples": total,

@@ -1,7 +1,4 @@
-# テキストの分割を上手く行うことに成功した
-# OpenAIのAPIが使えていないっていうエラーが出たが、コード変更せず何回か実行してたら通った
-# 無事実行完了
-# pip install "ragas[openai]==0.1.0”エラー出たらこれ入れて！！
+# pip install "ragas[openai]==0.1.0”エラー出たらこれ入れる
 import time, requests, wandb
 from datasets import load_dataset, Dataset
 from sentence_transformers import SentenceTransformer

@@ -154,7 +154,7 @@ for i, example in enumerate(dataset, 1):
 
         print()
     else:
-        print(f"  🚨 APIエラー: {response.status_code}\n{response.text}")
+        print(f"APIエラー: {response.status_code}\n{response.text}")
 
     time.sleep(1)
 
